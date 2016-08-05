@@ -1,4 +1,4 @@
-routes-api
+routers-api
 ===================
 
 With an Node-Express server usually you have to require all your routes and mount them. That's fine for a few routes, but for large applications this can get heavy.
@@ -94,7 +94,7 @@ DELETE /users/:id
 
 ## Installation & Usage
 ```
-npm install routes-api --save
+npm install routers-api --save
 ```
 
 ```javascript
@@ -108,12 +108,12 @@ app.use(express.static(__dirname, '/public'));
 
 // require the module and pass the
 // express instance
-require('routes-api')(app);
+require('routers-api')(app);
 
 // if you don't use the default routes folder
 // you can specify the path to your own
 // as the second argument
-require('routes-api')(app, './path/to/routes');
+require('routers-api')(app, './path/to/routes');
 
 module.exports = app;
 ```
