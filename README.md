@@ -7,7 +7,7 @@ This module is supposed to make this task a little bit easyer by loading all fil
 
 For example:
 ```
-myapp
+application
   |-> bin
   |-> public
   |-> routes
@@ -48,48 +48,38 @@ The following example is a common "resourcefull" route declaration.
 var express = require('express')
 var router = express.Router();
 
-router
-
-  .get('/', function(req, res) {
-    User.find({}, function(err, users) {
-      res.status(200).json(users);
-    });
-  })
-
-  .get('/:id', function(req, res) {
-    var id = req.params.id;
-    User.findById(id, function(err, user) {
-      if (err) throw err;
-      if (!user) res.sendStatus(404);
-      res.status(200).json(user);
-    });
-  })
-
-  .post('/', function(req, res) {
-    var body = req.body;
-    var user = new User(body);
-    user.save(function(err) {
-      if (err) throw err;
-      res.status(201).json(user);
-    });
-  })
-
-  .patch('/:id', function(req, res) {
-    var id = req.params.id;
-    var body = req.body;
-    User.findByIdAndUpdate(id, body, function(err, user) {
-      if (err) throw err;
-      res.sendStatus(200);
-    });
-  })
-
-  .delete('/:id', function(req, res) {
-    var id = req.params.id;
-    User.findOneAndRemove(id, function(err) {
-      if (err) throw err;
-      res.sendStatus(200);
-    });
+router.get('/', function(req, res) {
+  User.find({}, function(err, users) {
+    res.status(200).json(users);
   });
+}).get('/:id', function(req, res) {
+  var id = req.params.id;
+  User.findById(id, function(err, user) {
+    if (err) throw err;
+    if (!user) res.sendStatus(404);
+    res.status(200).json(user);
+  });
+}).post('/', function(req, res) {
+  var body = req.body;
+  var user = new User(body);
+  user.save(function(err) {
+    if (err) throw err;
+    res.status(201).json(user);
+  });
+}).patch('/:id', function(req, res) {
+  var id = req.params.id;
+  var body = req.body;
+  User.findByIdAndUpdate(id, body, function(err, user) {
+    if (err) throw err;
+    res.sendStatus(200);
+  });
+}).delete('/:id', function(req, res) {
+  var id = req.params.id;
+  User.findOneAndRemove(id, function(err) {
+    if (err) throw err;
+    res.sendStatus(200);
+  });
+});
 
 module.exports = router;
 ```
