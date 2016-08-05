@@ -1,6 +1,6 @@
 {
   "name": "routers-api",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "An express module that helps node-express developers with a router api mechanism. Dynamically creates routes on the fly, starting with the default directory \"./routes\".",
   "main": "lib/index.js",
   "scripts": {
