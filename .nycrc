@@ -1,0 +1,34 @@
+{
+  "nyc": {
+    "watermarks": {
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
+    },
+    "exclude": [
+      "/.nyc_output/**",
+      "/reports",
+      "/node_modules/**",
+      "/bower_components/**",
+      "/build/**",
+      "/coverage/**",
+      "/release/**",
+      "/_globals/**",
+      "/.sass-cache/**"
+    ],
+    "require": [
+      "babel-core/register"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "check-coverage": true,
+    "all": true,
+    "sourceMap": false,
+    "instrument": false,
+    "report-dir": "/reports/coverage"
+  }
+}

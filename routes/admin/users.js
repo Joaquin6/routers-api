@@ -1,12 +1,15 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
 
-router.get('/', function(req, res) {
-  return res.sendStatus(200);
-});
+const Router = express.Router();
 
-router.post('/', function(req, res) {
-  return res.sendStatus(201);
-});
+Router.route('/')
+  .get((req, res) => {
+    console.log('REQ HIT: ', req.url);
+    res.sendStatus(200);
+  })
+  .post((req, res) => {
+    console.log('REQ HIT: ', req.url);
+    res.sendStatus(200);
+  });
 
-module.exports = router;
+export default Router;
