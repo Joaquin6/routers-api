@@ -195,3 +195,10 @@ FakesAssemblies/
 
 # Multipart request upload folder
 static/
+
+
+# Yarn Files
+.yarnclean
+
+# NVM Files
+.nvmrc

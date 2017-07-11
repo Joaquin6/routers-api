@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Joaquin6/routers-api.git"
+    "url": "ssh://git@github.com/Joaquin6/routers-api.git"
   },
   "keywords": [
     "routes",
@@ -27,6 +27,38 @@
     "url": "https://github.com/Joaquin6/routers-api/issues"
   },
   "homepage": "https://github.com/Joaquin6/routers-api#readme",
+  "nyc": {
+    "watermarks": {
+      "lines": [80, 95],
+      "functions": [80, 95],
+      "branches": [80, 95],
+      "statements": [80, 95]
+    },
+    "exclude": [
+      "/.nyc_output/**",
+      "/reports",
+      "/node_modules/**",
+      "/bower_components/**",
+      "/build/**",
+      "/coverage/**",
+      "/release/**",
+      "/_globals/**",
+      "/.sass-cache/**"
+    ],
+    "require": [
+      "babel-core/register"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "cache": true,
+    "check-coverage": true,
+    "all": true,
+    "sourceMap": false,
+    "instrument": false,
+    "report-dir": "/reports/coverage"
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
