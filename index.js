@@ -107,4 +107,4 @@ class LoadRoutes {
 }
 
 /** export module */
-export default LoadRoutes;
+module.exports = LoadRoutes;
