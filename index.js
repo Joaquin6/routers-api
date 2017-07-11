@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const resolve = require('./lib').default;
+const resolve = require('./lib');
 
 function requirer(file) {
 	let router = require(file);
