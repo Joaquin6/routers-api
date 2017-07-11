@@ -1,6 +1,6 @@
-import path from 'path';
-import { readdirSync, lstatSync, existsSync } from 'fs';
-import resolve from './lib';
+const fs = require('fs');
+const path = require('path');
+const resolve = require('./lib').default;
 
 function requirer(file) {
 	let router = require(file);
@@ -62,12 +62,12 @@ class LoadRoutes {
 		if (target.startsWith('.'))
 			target = path.resolve(path.dirname(module.parent.filename), target);
 		/** return an empty array if target does not exists */
-		if (!existsSync(target)) return files;
+		if (!fs.existsSync(target)) return files;
 		/** look for files recursively */
-		readdirSync(target).forEach(file => {
+		fs.readdirSync(target).forEach(file => {
 			if (isHidden(file)) return;
 			let filePath = path.join(target, file);
-			if (lstatSync(filePath).isFile() && file.endsWith('.js')) files.push(filePath);
+			if (fs.lstatSync(filePath).isFile() && file.endsWith('.js')) files.push(filePath);
 			else files.push.apply(files, this.readdir(filePath));
 		}, this);
 
