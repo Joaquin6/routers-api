@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "pikadun.npm",
+    "fknop.vscode-npm",
+    "pikadun.npm",
+    "christian-kohler.npm-intellisense",
+    "howardzuo.vscode-npm-dependency",
+    "fabiospampinato.vscode-open-in-npm",
+    "karanba.npm-helper",
+    "moshfeu.auto-npm-install"
+  ]
+}
