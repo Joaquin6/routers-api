@@ -6,6 +6,10 @@
     "christian-kohler.npm-intellisense",
     "howardzuo.vscode-npm-dependency",
     "fabiospampinato.vscode-open-in-npm",
-    "karanba.npm-helper"
+    "karanba.npm-helper",
+    "pflannery.vscode-versionlens",
+    "andrew-codes.jest-snippets",
+    "develax.daddy-jest",
+    "june07.nims"
   ]
 }

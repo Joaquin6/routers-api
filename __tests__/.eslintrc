@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "../.eslintrc",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["jest"],
+  "env": {
+    "es6": true,
+    "amd": true,
+    "browser": true,
+    "shared-node-browser": true,
+    "commonjs": true,
+    "jest": true
+  },
+  "rules": {
+    "node/no-extraneous-require": ["error", {
+      "allowModules": ["electron"]
+    }]
+  }
+}

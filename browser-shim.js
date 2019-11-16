@@ -1,19 +1,27 @@
-import {dirname} from 'path';
+/* eslint-disable no-use-before-define */
+/* eslint-disable security/detect-non-literal-require, import/no-dynamic-require */
+const { dirname } = require('path');
 
-export let path = dirname(require.main.filename);
-
-export function resolve(pathToModule) {
+function resolve(pathToModule) {
   return path + pathToModule;
-};
+}
 
-export function require(pathToModule) {
+function require(pathToModule) {
   return require(resolve(pathToModule));
-};
+}
 
-export function toString() {
-  return path;
-};
+let path = dirname(require.main.filename);
 
-export function setPath(explicitlySetPath) {
+const toString = () => path;
+
+const setPath = (explicitlySetPath = __dirname) => {
   path = explicitlySetPath;
+};
+
+module.exports = {
+  path,
+  resolve,
+  require,
+  toString,
+  setPath,
 };

@@ -1,110 +1,146 @@
-const fs = require('fs');
-const path = require('path');
-const resolve = require('./lib');
+const { existsSync, readdirSync, lstatSync } = require('fs');
+const { basename, dirname, extname, join, resolve: pathResolve, normalize } = require('path');
+const resolve = require('./lib/resolve');
+const isHidden = require('./lib/isHidden');
 
 function requirer(file) {
-	let router = require(file);
-	if (router.default && router.__esModule)
-		return router.default;
-	return router;
+  const router = require(file);
+  return router.default && router.__esModule ? router.default : router;
 }
+
+module.exports.requirer = requirer;
 
 function generateTargetSource(target) {
-	let source = resolve(target);
-	source = source.path ? source.path : source;
-	if (!source.endsWith(target)) return source + `/${target}`;
-	return source;
+  let source = resolve(target);
+  source = source.path ? source.path : source;
+  return !source.endsWith(target) ? `${source}/${target}` : source;
 }
 
-/**
- * Check if target file is a hidden file
- * @param  {String} target
- * @return {Boolean}
- */
-function isHidden(target) {
-  /** remove file extension and normalize slashes */
-  let file = path.normalize(target).replace(path.extname(target), '').split('/').pop();
-  if (file.startsWith('.')) return true;
-  return false;
-}
+module.exports.generateTargetSource = generateTargetSource;
 
+/** export module */
 class LoadRoutes {
-	constructor (app, target = 'routes') {
-		if (!(this instanceof LoadRoutes))
-			return new LoadRoutes(app, target);
-		this.init(app, target);
-	}
-	/**
+  constructor(app, target = 'routes') {
+    if (!(this instanceof LoadRoutes)) {
+      return new LoadRoutes(app, target);
+    }
+
+    this.init(app, target);
+  }
+
+  /**
 	 * Inject the routes and routers into the express instance
 	 * @param  {Express} app
 	 * @param  {String} target
 	 */
-	init (app, target) {
-		target = generateTargetSource(target = typeof target === 'string' ? target : 'routes');
-		this.readdir(target).forEach(file => {
-			if (isHidden(file)) return;
-			let route = this.pathToRoute(file, target);
-			let router = requirer(file);
-			if (typeof router !== 'function') return;
-			app.use(route, router);
-		}, this);
-	}
-	/**
+  init(app, target) {
+    let trgt = typeof target === 'string' ? target : 'routes';
+    trgt = generateTargetSource(trgt);
+
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    this.readdir(trgt).forEach(file => {
+      if (isHidden(file)) {
+        return;
+      }
+
+      const route = this.pathToRoute(file, trgt);
+      const router = requirer(file);
+
+      if (typeof router !== 'function') {
+        return;
+      }
+
+      app.use(route, router);
+    }, this);
+  }
+
+  /**
 	 * Reads all the files and folder within a given target
 	 * @param  {String} target
 	 * @return {Array}
 	 */
-	readdir (target) {
-		let files = [];
+  readdir(target) {
+    if (typeof target !== 'string') {
+      throw new TypeError('Expecting target path to be a string');
+    }
 
-		if (typeof target !== 'string') throw new TypeError('Expecting target path to be a string');
-		/** resolve the target path */
-		if (target.startsWith('.'))
-			target = path.resolve(path.dirname(module.parent.filename), target);
-		/** return an empty array if target does not exists */
-		if (!fs.existsSync(target)) return files;
-		/** look for files recursively */
-		fs.readdirSync(target).forEach(file => {
-			if (isHidden(file)) return;
-			let filePath = path.join(target, file);
-			if (fs.lstatSync(filePath).isFile() && file.endsWith('.js')) files.push(filePath);
-			else files.push.apply(files, this.readdir(filePath));
-		}, this);
+    let files = [];
+    let trgt = target;
 
-		return files;
-	}
-	/**
+    /** resolve the target path */
+    if (trgt.startsWith('.')) {
+      trgt = pathResolve(dirname(module.parent.filename), trgt);
+    }
+
+    /** return an empty array if trgt does not exists */
+    if (!existsSync(trgt)) {
+      return files;
+    }
+
+    /** look for files recursively */
+    readdirSync(trgt).forEach(file => {
+      if (isHidden(file)) {
+        return;
+      }
+
+      const filePath = join(trgt, file);
+
+      if (lstatSync(filePath).isFile() && file.endsWith('.js')) {
+        files.push(filePath);
+      } else {
+        files = [...files, this.readdir(filePath)];
+      }
+    }, this);
+
+    return files;
+  }
+
+  /**
 	 * Convert a file path into an express route
 	 * @param  {String} path
 	 * @param  {String} base
 	 * @return {String}
 	 */
-	pathToRoute (target, base) {
-		/** remove file extension and normalize slashes */
-		target = path.normalize(target);
-		target = target.replace(path.extname(target), '');
+  pathToRoute(target, base) {
+    let bse = base;
+    /** remove file extension and normalize slashes */
+    let trgt = normalize(target);
+    trgt = trgt.replace(extname(trgt), '');
 
-		if (base && typeof base === 'string') {
-			target = target.split('/');
-			base = path.normalize(base).split('/');
-			base = base[base.length - 1];
+    if (bse && typeof bse === 'string') {
+      trgt = trgt.split('/');
+      bse = normalize(bse).split('/');
+      bse = bse[bse.length - 1];
 
-			let segments = [], segment;
-			for (let i = target.length - 1; i >= 0; i--) {
-				segment = target[i];
-				if (segment === base) break;
-				/** check if segment is a hidden file or an index */
-				if (i === target.length - 1 && segment === 'index') continue;
-				if (segment !== '') segments.push(segment);
-			}
+      const segments = [];
+      let segment;
 
-			return '/' + segments.reverse().join('/');
-		}
-		/** without a base, use the last segment */
-		target = path.basename(target);
-		return '/' + (target !== 'index' ? target : '');
-	}
+      // eslint-disable-next-line no-plusplus
+      for (let i = trgt.length - 1; i >= 0; i--) {
+        // eslint-disable-next-line security/detect-object-injection
+        segment = trgt[i];
+
+        if (segment === bse) {
+          break;
+        }
+
+        /** check if segment is a hidden file or an index */
+        if (i === trgt.length - 1 && segment === 'index') {
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+
+        if (segment !== '') {
+          segments.push(segment);
+        }
+      }
+
+      return `/${segments.reverse().join('/')}`;
+    }
+    /** without a base, use the last segment */
+    trgt = basename(trgt);
+    return `/${trgt !== 'index' ? trgt : ''}`;
+  }
 }
 
-/** export module */
 module.exports = LoadRoutes;

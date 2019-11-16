@@ -6,5 +6,15 @@
     },
     "files.exclude": {
         "**/.git": false
-    }
+    },
+    "files.associations": {
+      ".eslintrc": "jsonc"
+    },
+    "versionlens.npm.dependencyProperties": [
+      "dependencies",
+      "devDependencies",
+      "peerDependencies",
+      "optionalDependencies"
+    ],
+    "versionlens.showDependencyStatusesAtStartup": true
 }

@@ -4,14 +4,22 @@
   "description": "An express module that helps node-express developers with a router api mechanism. Dynamically creates routes on the fly, starting with the default directory \"./routes\".",
   "main": "index.js",
   "browser": "browser-shim.js",
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6"
-  },
   "scripts": {
-    "test": "nyc mocha --compilers js:babel-core/register --recursive -R spec tests",
-    "report-coverage": "npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "release": "semantic-release pre && npm publish && semantic-release post"
+    "coverage": "node ./node_modules/jest/bin/jest.js --coverage",
+    "dev": "nodemon index.js --exec \"node -r dotenv/config\" | bunyan",
+    "debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand",
+    "debug-brk": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
+    "lint": "eslint index.js browser-shim.js lib routes __tests__",
+    "lint:staged": "git diff --cached --name-only --diff-filter=d -- index.js browser-shim.js lib routes __tests__ | egrep \"\\\\.js$\" | tr \"\\\\r\\\\n\" ' ' | xargs eslint",
+    "lint:staged:precommit": "npm run lint:staged",
+    "release": "semantic-release pre && npm publish && semantic-release post",
+    "start": "node index.js",
+    "start:browser": "node browser-shim.js",
+    "test": "NODE_ENV=test node ./node_modules/jest/bin/jest.js --runInBand",
+    "test:precommit": "npm test",
+    "test:watch": "npm test -- --watch",
+    "preversion": "npm test && git add -A",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -36,22 +44,28 @@
   },
   "homepage": "https://github.com/Joaquin6/routers-api#readme",
   "devDependencies": {
-    "body-parser": "^1.17.2",
+    "@jest-runner/electron": "^2.0.2",
+    "body-parser": "^1.19.0",
+    "bunyan": "^1.8.12",
     "compression": "^1.7.0",
     "cross-env": "^5.0.1",
     "cz-conventional-changelog": "^1.2.0",
     "dotenv": "^8.2.0",
+    "electron": "^7.1.1",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^23.0.4",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-security": "^1.4.0",
-    "express": "^4.10.6",
+    "express": "^4.17.1",
+    "funky": "^2.3.0",
     "jest": "^24.9.0",
+    "jest-runner-eslint": "^0.7.5",
+    "nodemon": "^1.19.4",
     "pre-commit": "^1.2.2",
-    "semantic-release-cli": "^5.2.3",
-    "supertest": "^0.15.0",
-    "validate-commit-msg": "^2.8.0"
-  }
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {},
+  "optionalDependencies": {}
 }
