@@ -1,7 +1,8 @@
-
-test/
+__tests__/
 coverage/
 .gitignore
 .travis.yml
 .idea
+.vscode
+.env
 .nyc_output
