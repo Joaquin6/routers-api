@@ -58,7 +58,7 @@
     "eslint-plugin-jest": "^23.0.4",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-security": "^1.4.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "funky": "^2.3.0",
     "jest": "^24.9.0",
     "jest-runner-eslint": "^0.7.5",
